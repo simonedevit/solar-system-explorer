@@ -1,0 +1,300 @@
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    background: #000;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+}
+
+#reactylon-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
+    outline: none;
+    touch-action: none;
+}
+
+/* ─── Header ─────────────────────────────────────────────── */
+
+.app-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 52px 24px 20px;
+    z-index: 10;
+    pointer-events: none;
+    background: linear-gradient(to bottom, rgba(0, 0, 8, 0.7) 0%, transparent 100%);
+}
+
+.app-title {
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+}
+
+.app-subtitle {
+    color: rgba(255, 255, 255, 0.35);
+    font-size: 12px;
+    margin-top: 3px;
+    letter-spacing: 0.2px;
+}
+
+/* ─── Tap hint ────────────────────────────────────────────── */
+
+.tap-hint {
+    position: fixed;
+    bottom: 48px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255, 255, 255, 0.38);
+    font-size: 13px;
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 5;
+    transition: opacity 0.6s ease;
+    letter-spacing: 0.1px;
+}
+
+.tap-hint.hidden {
+    opacity: 0;
+}
+
+/* ─── Speed control ──────────────────────────────────────── */
+
+.speed-control {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(340px, 88vw);
+    background: rgba(6, 6, 20, 0.78);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 18px;
+    padding: 14px 18px 12px;
+    z-index: 8;
+    user-select: none;
+}
+
+.speed-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 10px;
+}
+
+.speed-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.40);
+}
+
+.speed-value {
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.88);
+    letter-spacing: -0.2px;
+    min-width: 90px;
+    text-align: right;
+}
+
+.speed-track-wrap {
+    position: relative;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.10);
+    border-radius: 2px;
+    margin-bottom: 7px;
+}
+
+.speed-track-fill {
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    background: linear-gradient(90deg, #4a9eff, #a078ff);
+    border-radius: 2px;
+    pointer-events: none;
+    transition: width 0.05s linear;
+}
+
+.speed-slider {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+    height: 28px;
+    top: 50%;
+    transform: translateY(-50%);
+    -webkit-appearance: none;
+}
+
+/* Invisible native slider sits on top; the visual track is .speed-track-fill */
+.speed-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; }
+.speed-slider::-moz-range-thumb { width: 20px; height: 20px; opacity: 0; }
+
+/* Visible thumb */
+.speed-track-wrap::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: var(--thumb-pct, 0%);   /* set by inline style on the fill */
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 0 8px rgba(74, 158, 255, 0.6);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+.speed-ticks {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.24);
+    letter-spacing: 0.3px;
+}
+
+/* ─── Planet info card ────────────────────────────────────── */
+
+.planet-info {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(6, 6, 20, 0.9);
+    backdrop-filter: blur(28px) saturate(160%);
+    -webkit-backdrop-filter: blur(28px) saturate(160%);
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 28px 28px 0 0;
+    padding: 10px 24px 44px;
+    color: white;
+    transform: translateY(100%);
+    transition: transform 0.42s cubic-bezier(0.32, 0.72, 0, 1);
+    z-index: 20;
+}
+
+.planet-info.visible {
+    transform: translateY(0);
+}
+
+/* drag handle */
+.planet-info::before {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.18);
+    border-radius: 2px;
+    margin: 10px auto 22px;
+}
+
+.planet-info__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.planet-info__name {
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -0.6px;
+    line-height: 1.1;
+}
+
+.planet-info__distance {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.4);
+    margin-top: 5px;
+    letter-spacing: 0.1px;
+}
+
+.planet-info__close {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: rgba(255, 255, 255, 0.65);
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    font-size: 22px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.18s;
+    line-height: 1;
+    padding-bottom: 1px;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.planet-info__close:active {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.planet-info__stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.planet-info__stat {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 16px;
+    padding: 14px 16px;
+}
+
+.planet-info__stat-label {
+    display: block;
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.35);
+    text-transform: uppercase;
+    letter-spacing: 0.9px;
+    margin-bottom: 5px;
+}
+
+.planet-info__stat-value {
+    display: block;
+    font-size: 15px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    letter-spacing: -0.2px;
+}
+
+.planet-info__fact {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.55);
+    line-height: 1.55;
+    padding: 14px 16px;
+    background: rgba(80, 140, 255, 0.07);
+    border: 1px solid rgba(80, 140, 255, 0.14);
+    border-radius: 16px;
+}
