@@ -5,6 +5,11 @@ type SelectListener = (planet: PlanetData | null) => void;
 const selectListeners = new Set<SelectListener>();
 let current: PlanetData | null = null;
 
+// ─── Sun selection ────────────────────────────────────────────────────────────
+type SunListener = (selected: boolean) => void;
+const sunListeners = new Set<SunListener>();
+let sunSelected = false;
+
 // ─── Orbit speed ──────────────────────────────────────────────────────────────
 // Earth's simulated orbital speed (rad/s) → one Earth year = 2π / 0.029 ≈ 216 s
 // speedMultiplier scales all planet orbit speeds proportionally.
@@ -20,12 +25,37 @@ export const planetStore = {
     select: (planet: PlanetData | null) => {
         current = planet;
         selectListeners.forEach(l => l(planet));
+        // deselect sun when a planet is selected
+        if (planet && sunSelected) {
+            sunSelected = false;
+            sunListeners.forEach(l => l(false));
+        }
     },
     subscribe: (listener: SelectListener) => {
         selectListeners.add(listener);
         return () => { selectListeners.delete(listener); };
     },
     getCurrent: () => current,
+
+    // Sun
+    selectSun: () => {
+        sunSelected = true;
+        sunListeners.forEach(l => l(true));
+        // deselect planet when sun is selected
+        if (current) {
+            current = null;
+            selectListeners.forEach(l => l(null));
+        }
+    },
+    deselectSun: () => {
+        sunSelected = false;
+        sunListeners.forEach(l => l(false));
+    },
+    isSunSelected: () => sunSelected,
+    subscribeSun: (listener: SunListener) => {
+        sunListeners.add(listener);
+        return () => { sunListeners.delete(listener); };
+    },
 
     // Speed
     setSpeed: (multiplier: number) => {

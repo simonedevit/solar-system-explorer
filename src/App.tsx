@@ -5,6 +5,7 @@ import { Color4 } from '@babylonjs/core/Maths/math.color';
 import { planetStore } from './store/planetStore';
 import SolarSystem from './components/SolarSystem';
 import PlanetInfo from './components/PlanetInfo';
+import SunInfo from './components/SunInfo';
 import SpeedControl from './components/SpeedControl';
 
 const App: React.FC = () => {
@@ -33,6 +34,7 @@ const App: React.FC = () => {
                 Tap a planet to explore
             </div>
             <SpeedControl />
+            <SunInfo />
             <PlanetInfo />
         </>
     );

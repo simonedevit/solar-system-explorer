@@ -30,6 +30,10 @@ const PlanetInfo: React.FC = () => {
                     </div>
                     <div className="planet-info__stats">
                         <div className="planet-info__stat">
+                            <span className="planet-info__stat-label">Diameter</span>
+                            <span className="planet-info__stat-value">{selectedPlanet.diameter}</span>
+                        </div>
+                        <div className="planet-info__stat">
                             <span className="planet-info__stat-label">Day length</span>
                             <span className="planet-info__stat-value">{selectedPlanet.dayLength}</span>
                         </div>

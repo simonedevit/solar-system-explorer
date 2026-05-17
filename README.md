@@ -4,6 +4,8 @@
 
 An interactive 3D solar system built with [Reactylon](https://reactylon.com) (React + Babylon.js).
 
+<img src="assets/demo.gif" width="100%" />
+
 ## Getting started
 
 ```bash

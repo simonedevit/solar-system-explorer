@@ -9,6 +9,7 @@ import { SphereParticleEmitter } from '@babylonjs/core/Particles/EmitterTypes/sp
 // (zero capacity) → WebGPU buffer RangeError. Imperative creation is mandatory.
 // Vector3/Color4 are value-objects passed as props or used inside the justified useEffect.
 import { useScene } from 'reactylon';
+import { planetStore } from '../store/planetStore';
 import { generateParticleTex } from '../utils/generatePlanetTexture';
 // JUSTIFIED: generateParticleTex creates a DynamicTexture via canvas 2D drawing
 // (programmatic pixel data). No Reactylon JSX element exists for procedurally-drawn textures.
@@ -45,7 +46,7 @@ const Sun: React.FC = () => {
     return (
         // Sun sphere + material fully declared as Reactylon components.
         // Two <texture> children: TextureHost.addChild assigns each to material[kind].
-        <sphere ref={bodyRef} name="sun" options={{ diameter: 3.8, segments: 32 }} isPickable={false}>
+        <sphere ref={bodyRef} name="sun" options={{ diameter: 3.8, segments: 32 }} onPick={() => planetStore.selectSun()}>
             <standardMaterial
                 name="sun-mat"
                 emissiveColor={new Color3(1, 1, 1)}
