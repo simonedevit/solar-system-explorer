@@ -1,6 +1,7 @@
 import { Configuration } from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
+import CopyPlugin from 'copy-webpack-plugin';
 
 const config: Configuration = {
     entry: './src/index.tsx',
@@ -42,6 +43,12 @@ const config: Configuration = {
     plugins: [
         new HtmlWebpackPlugin({ template: 'public/index.html' }),
         new ForkTsCheckerWebpackPlugin(),
+        // Copy planet textures from public/ into dist/ so they are served at /textures/*
+        new CopyPlugin({
+            patterns: [
+                { from: 'public/textures', to: 'textures' },
+            ],
+        }),
     ],
 };
 
